@@ -40,10 +40,11 @@ jobs:
             }
           }
           EOF
-
+          
       - name: Build APK
         run: |
-          gradle -I kotlin-fix.gradle -p source/medical_stock_offline_android assembleDebug
+          gradle -I "$GITHUB_WORKSPACE/kotlin-fix.gradle" -p "$GITHUB_WORKSPACE/source/medical_stock_offline_android" assembleDebug
+          
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
