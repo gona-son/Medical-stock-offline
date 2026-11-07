@@ -29,11 +29,21 @@ jobs:
       - name: Extract Android project
         run: |
           unzip -q medical_stock_offline_android.zip -d source
+          
+      - name: Fix Kotlin duplicate classes
+        run: |
+          cat > kotlin-fix.gradle <<'EOF'
+          allprojects {
+            configurations.configureEach {
+              exclude group: "org.jetbrains.kotlin", module: "kotlin-stdlib-jdk7"
+              exclude group: "org.jetbrains.kotlin", module: "kotlin-stdlib-jdk8"
+            }
+          }
+          EOF
 
       - name: Build APK
         run: |
-          gradle -p source/medical_stock_offline_android assembleDebug
-
+          gradle -I kotlin-fix.gradle -p source/medical_stock_offline_android assembleDebug
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
